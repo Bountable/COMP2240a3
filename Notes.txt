@@ -1,0 +1,3 @@
+Result for the following command: 
+
+java A3 16 3 Process1.txt Process2.txt Process3.txt Process4.txt
