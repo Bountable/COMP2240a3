@@ -1,6 +1,18 @@
+
+/**
+ * @author Darcy 
+ * c3404758
+ * Date: 23/10/23
+ * COMP2240 A3
+ */
+
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
+
+
 
 /**
  * Represents a Variable Global Clock Scheduler.
@@ -37,13 +49,18 @@ public class VariableGlobalClockScheduler {
      */
     private boolean tryUnblockingTasks() {
         boolean taskUnblocked = false;
-        for (ProcessTask task : processTasks) {
+        Iterator<ProcessTask> iterator = processTasks.iterator();
+        
+        while (iterator.hasNext()) {
+            ProcessTask task = iterator.next();
+            
             if (task.getIsBlocked() && task.getUnblockTimestamp() == currentTimestamp) {
                 task.setIsBlocked(false);
                 taskQueue.add(task);
                 taskUnblocked = true;
             }
         }
+        
         return taskUnblocked;
     }
 
@@ -166,11 +183,16 @@ public class VariableGlobalClockScheduler {
      * @return True if the instruction is present, otherwise false.
      */
     private boolean isInstructionInGlobalCache(String taskId, int instruction) {
-        for (ProcessTask frameTask : globalCache) {
+        Iterator<ProcessTask> iterator = globalCache.iterator();
+        
+        while (iterator.hasNext()) {
+            ProcessTask frameTask = iterator.next();
+            
             if (frameTask.getTaskId().equals(taskId) && frameTask.getInstructionPage() == instruction) {
                 return true;
             }
         }
+        
         return false;
     }
 }

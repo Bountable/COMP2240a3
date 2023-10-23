@@ -7,7 +7,7 @@ public class A3 {
 
     public static void main(String[] args) {
 
-        if (args.length < 3) { // We now need at least 3 arguments: frame number, quantum size, and at least 1 file name.
+        if (args.length < 3) { 
             System.out.println("Usage: java A3 <numberOfFrames> <quantumSize> <filename1> <filename2> ... <filenameN>");
             return;
         }

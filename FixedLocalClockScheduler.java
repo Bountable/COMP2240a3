@@ -1,4 +1,14 @@
+
+/**
+ * @author Darcy 
+ * c3404758
+ * Date: 23/10/23
+ * COMP2240 A3
+ */
+
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -23,7 +33,12 @@ public class FixedLocalClockScheduler {
         this.frameCount = frameCount;
         this.quantum = quantum;
         this.processTasks = processTasks;
-        for (ProcessTask task : processTasks) {
+    
+        Iterator<ProcessTask> iterator = processTasks.iterator();
+    
+        while (iterator.hasNext()) {
+            ProcessTask task = iterator.next();
+            
             int size = frameCount / processTasks.size();
             task.initializeLocalCache(size);
         }
@@ -33,16 +48,22 @@ public class FixedLocalClockScheduler {
      * Checks if a process task has been unblocked and unblocks the task if necessary.
      * 
      * @return True if a task has been unblocked, otherwise false.
+     * 
      */
     private boolean tryUnblockingTasks() {
         boolean taskUnblocked = false;
-        for (ProcessTask task : processTasks) {
+        Iterator<ProcessTask> iterator = processTasks.iterator();
+        
+        while (iterator.hasNext()) {
+            ProcessTask task = iterator.next();
+            
             if (task.getIsBlocked() && task.getUnblockTimestamp() == currentTimestamp) {
                 task.setIsBlocked(false);
                 taskQueue.add(task);
                 taskUnblocked = true;
             }
         }
+        
         return taskUnblocked;
     }
 
