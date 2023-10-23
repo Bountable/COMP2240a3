@@ -1,14 +1,14 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class A3 {
 
     public static void main(String[] args) {
 
         if (args.length < 3) { // We now need at least 3 arguments: frame number, quantum size, and at least 1 file name.
-            System.out.println("Usage: java A3 <numberOfFrames> <quantumSize> <filename1> [<filename2> ... <filenameN>]");
+            System.out.println("Usage: java A3 <numberOfFrames> <quantumSize> <filename1> <filename2> ... <filenameN>");
             return;
         }
 
@@ -23,10 +23,13 @@ public class A3 {
 
         FixedLocalClockScheduler flScheduler = new FixedLocalClockScheduler(numFrames, quantumTime, processTasks);
         flScheduler.execute();
+        System.out.print(flScheduler);
+        System.out.print("--------------------------------------------------------------------------------------------- \n");
 
         VariableGlobalClockScheduler vgScheduler = new VariableGlobalClockScheduler(numFrames, quantumTime, processTasks);
         vgScheduler.execute();
-    }
+        System.out.print(vgScheduler);
+    }   
 
     /**
      * Parses a given file to extract process details.
@@ -36,24 +39,22 @@ public class A3 {
      */
     private static ProcessTask parseFile(String filename) {
         ProcessTask processTask = new ProcessTask();
-        System.out.println("Processing file: " + filename);
-
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filename))) {
-            String line;
-
-            while ((line = bufferedReader.readLine()) != null) {
+        try (Scanner scanner = new Scanner(new File(filename))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+        
                 // Split the line on ":" to separate the field and value
                 String[] parts = line.split(":");
                 if (parts.length == 2) {
                     String field = parts[0].trim();
                     String value = parts[1].trim();
-
+        
                     if (field.equals("name")) {
                         value = value.replace("process", "").replace(";", "").trim();
                         String taskName = "Process" + Integer.parseInt(value);
                         processTask.setTaskId(taskName);
                     }
-
+        
                     if (field.equals("page")) {
                         value = value.replace(";", "").trim();
                         int pageNumber = Integer.parseInt(value);
@@ -61,12 +62,11 @@ public class A3 {
                     }
                 }
             }
-
         } catch (NumberFormatException | IOException e) {
             System.err.println("Error processing file: " + filename);
             e.printStackTrace();
         }
-
+        
         return processTask;
     }
 }

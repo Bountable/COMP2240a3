@@ -95,28 +95,32 @@ public class FixedLocalClockScheduler {
             }
         }
 
-        printResults();
     }
 
-    /**
-     * Prints the results of the scheduling process.
-     */
-    private void printResults() {
-        System.out.println("Clock - Fixed-Local Replacement:");
-        System.out.printf("%-5s %-15s %-15s %-15s %-15s%n", "PID", "Task-ID", "Completion-Time", "# Faults", "Fault-Timestamps");
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
 
-        int maxLineLength = 0;
-
+        sb.append("Clock - Variable-Global Replacement:\n");
+        sb.append(padEnd("PID", 5)).append(padEnd("Task-ID", 15)).append(padEnd("Completion-Time", 15)).append(padEnd("# Faults", 15)).append("Fault-Timestamps\n");
         for (int i = 0; i < processTasks.size(); i++) {
             ProcessTask task = processTasks.get(i);
-            String line = String.format("%-5s %-15s %-15s %-15s %-15s%n", i + 1, task.getTaskId(), task.getCompletionTime(), task.getFaultTimestamps().size(), task.getFaultTimestamps());
-            System.out.print(line);
-            maxLineLength = Math.max(maxLineLength, line.length());
+            sb.append(padEnd(String.valueOf(i + 1), 5))
+            .append(padEnd(task.getTaskId(), 15))
+            .append(padEnd(String.valueOf(task.getCompletionTime()), 15))
+            .append(padEnd(String.valueOf(task.getFaultTimestamps().size()), 15))
+            .append(task.getFaultTimestamps()).append("\n");
         }
 
-        for (int i = 0; i < maxLineLength; i++) {
-            System.out.print("-");
-        }
-        System.out.println("\n");
+        return sb.toString();
     }
+
+    private String padEnd(String str, int length) {
+        if (str.length() >= length) {
+            return str;
+        }
+        return str + " ".repeat(length - str.length());
+    }
+
 }
